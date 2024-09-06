@@ -1,0 +1,42 @@
+10:43:18 **** Incremental Build of configuration Release for project meccos ****
+"C:\\PROGRAMAS\\Sloeber\\arduinoPlugin\\tools\\make\\make" all 
+'Building file: ..\sloeber.ino.cpp'
+'Starting C++ compile'
+"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7/bin/avr-g++" -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=atmega328p -DF_CPU=16000000L -DARDUINO=10812 -DARDUINO_AVR_PRO -DARDUINO_ARCH_AVR     -I"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\variants\eightanaloginputs" -I"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\cores\arduino" -I"C:\Users\antonio\Documents\Arduino\libraries\meccanoid-library" -I"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\libraries\Wire\src" -I"C:\Users\antonio\Documents\Arduino\libraries\Servo\src" -MMD -MP -MF"sloeber.ino.cpp.d" -MT"sloeber.ino.cpp.o" -D__IN_ECLIPSE__=1 -x c++ "..\sloeber.ino.cpp"   -o "sloeber.ino.cpp.o"
+'Finished building: ..\sloeber.ino.cpp'
+' '
+'Starting combiner'
+"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7/bin/avr-gcc" -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=atmega328p   -o "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.elf"    .\sloeber.ino.cpp.o  .\libraries\meccanoid-library\MeccaBrain.cpp.o  .\libraries\Wire\src\utility\twi.c.o  .\libraries\Wire\src\Wire.cpp.o  .\libraries\Servo\src\stm32f4\Servo.cpp.o  .\libraries\Servo\src\samd\Servo.cpp.o  .\libraries\Servo\src\sam\Servo.cpp.o  .\libraries\Servo\src\nrf52\Servo.cpp.o  .\libraries\Servo\src\avr\Servo.cpp.o     C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/arduino.ar  "-LC:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release" -lm
+'Finished building: meccos.elf'
+' '
+'Do all objcopy commands'
+"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7/bin/avr-objcopy" -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0  "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.elf" "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.eep"
+"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7/bin/avr-objcopy" -O ihex -R .eeprom  "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.elf" "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.hex"
+'Finished building: meccos.hex'
+' '
+'Building target: meccos'
+'Printing size:'
+"C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7/bin/avr-size" -A "C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.elf"
+C:\GOOGLE_DRIVE\GDRIVE\TONI\PROY\GITHUB\MECCOS\meccos\Release/meccos.elf  :
+section                     size      addr
+.data                         66   8388864
+.text                       8270         0
+.bss                         818   8388930
+.comment                      17         0
+.note.gnu.avr.deviceinfo      64         0
+.debug_aranges               496         0
+.debug_info                21037         0
+.debug_abbrev               3859         0
+.debug_line                 8057         0
+.debug_frame                1592         0
+.debug_str                  4077         0
+.debug_loc                 11504         0
+.debug_ranges                464         0
+Total                      60321
+
+
+'Finished building target: meccos'
+' '
+
+10:43:19 Build Finished. 0 errors, 0 warnings. (took 1s.493ms)
+

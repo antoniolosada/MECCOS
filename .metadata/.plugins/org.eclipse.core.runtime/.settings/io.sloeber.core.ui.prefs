@@ -1,0 +1,7 @@
+Build\ before\ upload\ option=TRUE
+Clean\ Serial\ Monitor\ after\ upload=false
+FmStatus=5
+Open\ serial\ connections\ with\ the\ monitor=true
+Serial\ Monitor\ Last\ Used\ Line\ Ending\ index=3
+Serial\ Monitor\ Last\ Used\ auto\ scroll\ setting=true
+eclipse.preferences.version=1

@@ -1,0 +1,320 @@
+// MECCOS: MECano COntrol System
+
+#include "Arduino.h"
+#include <MeccaBrain.h>
+#include <Wire.h>
+#include <Servo.h>
+
+const byte MAX_SERVOS_POS = 12;
+const byte iGradosSeg = 60;
+
+Servo aServo[4]; //Manos con servos estandar
+
+struct sPosServos
+{
+  int iValor;
+  int iValorInicial;
+  int iValorFinal;
+  byte iValoIniTemporizado;
+  byte iValorFinTemporizado;
+  long ms_tiempo_mov;
+  long ms_inicial = 0;
+  long ms_final = 0;
+  bool MovTemporizadoActivo = false;
+} aPosServos[MAX_SERVOS_POS];
+
+//Pins to connect Meccanoids' servos, where chain 1 is left arm, chain 2 is head and chain 3 is right arm
+//pins can be any digital pins, not necessary PWM
+const int chainPin1 = 4; //Left
+const int chainPin2 = 5; //Head
+const int chainPin3 = 6; //Right
+
+const int PinLeftWirst = 7;
+const int PinLeftHand = 8;
+const int PinRightWirst = 9;
+const int PinRightHand = 10;
+
+MeccaBrain chain1(chainPin1); //Left, each chain allows to plug up to 4 smart modules
+MeccaBrain chain2(chainPin2); //Head, each chain allows to plug up to 4 smart modules
+MeccaBrain chain3(chainPin3); //Right, each chain allows to plug up to 4 smart modules
+
+const byte COMMAND_POS  	= 80;
+const byte COMMAND_COLOR  	= 81;
+const byte COMMAND_HEAD_LED	= 82;
+const byte EXEC_PROG_MOV	= 83;
+
+//Joints mapping:
+//Chain 1 - Left Arm. 1.0 is Arm Pitch, 1.1 is Arm Roll, 1.2 is Elbow
+//Chain 2 - Head. 2.0 is Head Yaw, 2.1 is Head Roll, 2.2 is LEDs
+//Chain 3 - Right Arm. 3.0 is Arm Pitch, 3.1 is Arm Roll 3.2 is Elbow
+const byte LEFT_ARM_PITCH 	= 0;
+const byte LEFT_ARM_ROLL 	= 1;
+const byte LEFT_ARM_ELBOW 	= 2;
+const byte HEAD_YAW 		= 3;
+const byte HEAD_ROLL 		= 4;
+const byte RIGHT_ARM_PITCH 	= 5;
+const byte RIGHT_ARM_ROLL 	= 6;
+const byte RIGHT_ARM_ELBOW 	= 7;
+
+const byte RIGHT_WRIST 		= 8;
+const byte RIGHT_HAND 		= 9;
+const byte LEFT_WRIST 		= 10;
+const byte LEFT_HAND 		= 11;
+
+//	Pos Servos				 {000,001,002,003,004,005,006,007,008,009,010,011};
+byte valor_ini[MAX_SERVOS] = {128,128,128,128,128,128,128,128,128,128,128,128};
+byte valor_min[MAX_SERVOS] = {000,000,000,000,000,000,000,000,000,000,000,000};
+byte valor_max[MAX_SERVOS] = {255,255,255,255,255,255,255,255,255,255,255,255};
+
+//jointName is LEFT_ARM_ROLL etc
+//pos is 0...255
+void setJoint(byte jointName, byte pos)
+{
+
+  switch (jointName)
+  {
+    case LEFT_ARM_PITCH:
+      chain1.setServoPosition(0, pos);
+      chain1.communicate();
+      break;
+    case LEFT_ARM_ROLL:
+      chain1.setServoPosition(1, pos);
+      chain1.communicate();
+      break;
+    case LEFT_ARM_ELBOW:
+      chain1.setServoPosition(2, pos);
+      chain1.communicate();
+      break;
+    case HEAD_YAW:
+      chain2.setServoPosition(0, pos);
+      chain2.communicate();
+      break;
+    case HEAD_ROLL:
+      chain2.setServoPosition(1, pos);
+      chain2.communicate();
+      break;
+    case RIGHT_ARM_PITCH:
+      chain3.setServoPosition(0, pos);
+      chain3.communicate();
+      break;
+    case RIGHT_ARM_ROLL:
+      chain3.setServoPosition(1, pos);
+      chain3.communicate();
+      break;
+    case RIGHT_ARM_ELBOW:
+      chain3.setServoPosition(2, pos);
+      chain3.communicate();
+      break;
+
+    case RIGHT_WRIST:
+    	aServo[0].write(pos);
+	  break;
+    case RIGHT_HAND:
+    	aServo[1].write(pos);
+    	break;
+    case LEFT_WRIST:
+    	aServo[2].write(pos);
+    	break;
+    case LEFT_HAND:
+    	aServo[3].write(pos);
+    	break;
+  }
+}
+
+void setEyesColor(byte red, byte green, byte blue, byte fadetime) {
+
+  chain2.setLEDColor(red, green, blue, fadetime);
+  chain2.communicate();
+}
+
+// Servo colors
+const byte JOINT_BLACK = 0xF0;
+const byte JOINT_RED = 0xF1;
+const byte JOINT_GREEN = 0xF2;
+const byte JOINT_BROWN = 0xF3;
+const byte JOINT_BLUE = 0xF4;
+const byte JOINT_VIOLET = 0xF5;
+const byte JOINT_SEA = 0xF6;
+const byte JOINT_WHITE = 0xF7;
+
+// set the servo color
+// for example, setJointColor(RIGHT_ARM_ELBOW, JOINT_VIOLET)
+void setJointColor(byte jointName, byte color) {
+
+  switch (jointName) {
+
+    case LEFT_ARM_PITCH:
+      chain1.setServoColor(0, color);
+      chain1.communicate();
+      break;
+    case LEFT_ARM_ROLL:
+      chain1.setServoColor(1, color);
+      chain1.communicate();
+      break;
+    case LEFT_ARM_ELBOW:
+      chain1.setServoColor(2, color);
+      chain1.communicate();
+      break;
+    case HEAD_YAW:
+      chain2.setServoColor(0, color);
+      chain2.communicate();
+      break;
+    case HEAD_ROLL:
+      chain2.setServoColor(1, color);
+      chain2.communicate();
+      break;
+    case RIGHT_ARM_PITCH:
+      chain3.setServoColor(0, color);
+      chain3.communicate();
+      break;
+    case RIGHT_ARM_ROLL:
+      chain3.setServoColor(1, color);
+      chain3.communicate();
+      break;
+    case RIGHT_ARM_ELBOW:
+      chain3.setServoColor(2, color);
+      chain3.communicate();
+      break;
+  }
+}
+
+//The setup function is called once at startup of the sketch *************************************************************************************************
+void setup()
+{
+	  pinMode(chainPin1, OUTPUT);
+	  pinMode(chainPin2, OUTPUT);
+	  pinMode(chainPin3, OUTPUT);
+
+
+	  pinMode(PinLeftWirst, OUTPUT);
+	  pinMode(PinLeftHand, OUTPUT);
+	  pinMode(PinRightWirst, OUTPUT);
+	  pinMode(PinRightHand, OUTPUT);
+
+	  aServo[0].attach(PinLeftWirst);
+	  aServo[1].attach(PinLeftHand);
+	  aServo[2].attach(PinRightWirst);
+	  aServo[3].attach(PinRightHand);
+
+	  Serial.begin(9600);
+
+	  Wire.begin(13);                // join i2c bus with address #8
+	  Wire.onReceive(receiveEvent); // register event
+	  Serial.begin(9600);
+
+	  //"Discover" all the modules (make them blue-colored instead of green-colored)
+	  //for some unknown reason, I have to repeat it from time to time
+	  for (int i = 0; i < 50; i++)
+	  {
+	    chain1.communicate();
+	    chain2.communicate();
+	    chain3.communicate();
+	  }
+
+	  //delay to be sure that all modules are ready
+	  //if some module is "not discovered" than it will remain green and later this module will behave strangely
+	  delay(2000);
+
+	  //Inicializamos posición de los servos
+	  for (int i=0; i<MAX_SERVOS; i++)
+		  setJoint(i, valor_ini[i]);
+}
+
+// The loop function is called in an endless loop *************************************************************************************************
+void loop()
+{
+	ControlMovimientoTemporizado();
+}
+
+int comando = 0;
+int disp = 0;
+int pos_color = 0;
+
+bool receiveEvent(int howMany)
+{
+  comando = Wire.read();
+  if ((comando == COMMAND_POS) || (comando == COMMAND_COLOR) || (comando == EXEC_PROG_MOV))
+  {
+	  delay(20);
+	  disp = Wire.read();
+	  pos_color = Wire.read();
+
+	  EjecutarComando(comando, disp, pos_color);
+  }
+}
+
+
+void EjecutarMovimientoProgramado()
+{
+	  for (int indServo=0; indServo<=MAX_SERVOS_POS; indServo++)
+	  {
+		  //Si tiene tiempo programado y no se está moviendo, asignamos ms de parada y lo activamos para moverse
+		  if ((aPosServos[indServo].ms_tiempo_mov > 0) && !aPosServos[indServo].MovTemporizadoActivo)
+		  {
+			  aPosServos[indServo].ms_inicial = millis();
+			  aPosServos[indServo].ms_final = aPosServos[indServo].ms_inicial + aPosServos[indServo].ms_tiempo_mov;
+			  aPosServos[indServo].MovTemporizadoActivo = true;
+		  }
+	  }
+}
+
+void EjecutarComando(int comando, int disp, int pos_color)
+{
+  switch(comando)
+  {
+  case COMMAND_POS:
+	  if (aPosServos[disp].MovTemporizadoActivo)
+		  aPosServos[disp].MovTemporizadoActivo = false;
+
+	  aPosServos[disp].iValoIniTemporizado = aPosServos[disp].iValor;
+	  aPosServos[disp].iValorFinTemporizado = pos_color;
+	  aPosServos[disp].ms_tiempo_mov = long(abs(aPosServos[disp].iValorFinTemporizado -
+												   aPosServos[disp].iValoIniTemporizado))*1000 / iGradosSeg;
+	  break;
+  case COMMAND_COLOR:
+	  setJointColor(disp, pos_color);
+	  break;
+  case COMMAND_HEAD_LED:
+	  byte red, green, blue;
+	  red = (pos_color & 1)*255;
+	  green = (pos_color & 2)*255;
+	  blue = (pos_color & 4)*255;
+	  setEyesColor(red, green, blue, disp);
+	  break;
+  case EXEC_PROG_MOV:
+	  EjecutarMovimientoProgramado();
+	  break;
+  }
+}
+
+void ControlMovimientoTemporizado()
+{
+	long ms = millis();
+	  for (int indServo = 0; indServo < MAX_SERVOS_POS; indServo++)
+	  {
+		  if (aPosServos[indServo].MovTemporizadoActivo)
+		  {
+			  if (ms > aPosServos[indServo].ms_final)
+			  {
+				  aPosServos[indServo].iValor = aPosServos[indServo].iValorFinTemporizado;
+				  setJoint(indServo, aPosServos[indServo].iValor);
+				  aPosServos[indServo].MovTemporizadoActivo = false;
+				  aPosServos[indServo].ms_tiempo_mov = 0;
+			  }
+			  else
+			  {
+				  float Avance = 1 - float(abs((aPosServos[indServo].ms_final-ms))) / (aPosServos[indServo].ms_final-aPosServos[indServo].ms_inicial);
+				  int iValor = aPosServos[indServo].iValoIniTemporizado + 1.0*(aPosServos[indServo].iValorFinTemporizado-aPosServos[indServo].iValoIniTemporizado)*Avance;
+
+				  if (iValor != aPosServos[indServo].iValor)
+				  {
+					  aPosServos[indServo].iValor = iValor;
+					  setJoint(indServo, iValor);
+				  }
+			  }
+		  }
+	  }
+}
+
+
+

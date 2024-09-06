@@ -1,0 +1,17 @@
+libraries\Wire\src\utility\twi.c.o: \
+ C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\libraries\Wire\src\utility\twi.c \
+ C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\cores\arduino/Arduino.h \
+ C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\cores\arduino/binary.h \
+ C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\variants\eightanaloginputs/pins_arduino.h \
+ c:\programas\sloeber\arduinoplugin\packages\arduino\hardware\avr\1.8.5\variants\standard\pins_arduino.h \
+ C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\libraries\Wire\src\utility\twi.h
+
+C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\cores\arduino/Arduino.h:
+
+C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\cores\arduino/binary.h:
+
+C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\variants\eightanaloginputs/pins_arduino.h:
+
+c:\programas\sloeber\arduinoplugin\packages\arduino\hardware\avr\1.8.5\variants\standard\pins_arduino.h:
+
+C:\PROGRAMAS\Sloeber\arduinoPlugin\packages\arduino\hardware\avr\1.8.5\libraries\Wire\src\utility\twi.h:

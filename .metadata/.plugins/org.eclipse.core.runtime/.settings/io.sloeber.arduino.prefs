@@ -1,0 +1,14 @@
+Automatically\ import\ libraries=true
+FbStatus=400
+FsStatus=19
+FuStatus=326
+Last\ Used\ Upload\ port=COM1
+Last\ used\ Board=pro
+Last\ used\ Boards\ file=${SLOEBER_HOME}\\arduinoPlugin\\packages\\arduino\\hardware\\avr\\1.8.5\\boards.txt
+Last\ used\ Examples=
+Private\ Library\ Path=C\:/Users/antonio/Documents/Arduino/libraries
+Private\ hardware\ Path=C\:/Users/antonio/Documents/Arduino/hardware
+eclipse.preferences.version=1
+last\ Used\ upload\ Protocol=Default
+last\ used\ Board\ custom\ option\ selections=cpu\=16MHzatmega328
+sloeber.TEMPLATE_USE_DEFAULT=defaultIno
